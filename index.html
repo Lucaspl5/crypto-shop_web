@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluxit Crypto — Bots de Trading Automatizado con IA</title>
+  <meta name="description" content="Automatiza tu trading en Binance con bots de IA. Stop Loss automático, configuración completa incluida. Desde €49. Duerme mientras el bot trabaja.">
+  <link rel="canonical" href="https://crypto-shop.fluxit.es/">
+  <meta property="og:title" content="Fluxit Crypto — Bots de Trading con IA">
+  <meta property="og:description" content="Automatiza tu trading en Binance. Zero código. Bot activo en 24h.">
+  <meta property="og:url" content="https://crypto-shop.fluxit.es/">
+  <meta property="og:type" content="website">
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-7LBYX8W3BM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-7LBYX8W3BM');
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- anime.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+  <style>
+    /* ─── CURSOR ────────────────────────────────────────────── */
+    #fx-cursor {
+      position: fixed; width: 8px; height: 8px;
+      background: #E07040; border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+    }
+    #fx-cursor.hovered { width: 16px; height: 16px; opacity: 0.6; }
+    #fx-cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid rgba(224,112,64,0.4); border-radius: 50%;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+    }
+
+    /* ─── HERO PARTICLES ────────────────────────────────────── */
+    #hero-particles {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+    }
+    .hero-particle {
+      position: absolute; border-radius: 50%; background: rgba(224,112,64,0.55);
+    }
+
+    /* ─── FEATURED BADGE PULSE ──────────────────────────────── */
+    @keyframes badgePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(224,112,64,0.5); }
+      50%       { box-shadow: 0 0 0 8px rgba(224,112,64,0); }
+    }
+    .product-badge { animation: badgePulse 2.4s ease infinite; }
+
+    /* ─── BITCOIN FLOAT DECORATION ───────────────────────────── */
+    @keyframes btcFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.07; }
+      50%       { transform: translateY(-20px) rotate(8deg); opacity: 0.12; }
+    }
+    .btc-deco {
+      position: absolute;
+      font-size: 120px;
+      color: var(--accent);
+      user-select: none;
+      pointer-events: none;
+      animation: btcFloat 6s ease-in-out infinite;
+    }
+
+    /* ─── SCAN LINE ON HERO ─────────────────────────────────── */
+    .hero::after {
+      content: '';
+      position: absolute; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(224,112,64,.3), transparent);
+      animation: scanline 4s linear infinite;
+      pointer-events: none; z-index: 2;
+    }
+    @keyframes scanline {
+      0%   { top: 0; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* ─── ANIM INITIAL STATES ───────────────────────────────── */
+    .trust-item { opacity: 0; }
+    .cta-sub { opacity: 0; }
+    .cta-btns a { opacity: 0; }
+    nav { opacity: 0; }
+    .bar { opacity: 0; }
+  </style>
+
+  <style>
+    /* ─── ROOT ─────────────────────────────────────────────── */
+    :root {
+      --bg:       #0B1120;
+      --bg2:      #07090F;
+      --bg3:      #111B30;
+      --bg4:      #172340;
+      --accent:   #E07040;
+      --accent2:  #F0A060;
+      --text:     #E8EDFF;
+      --muted:    #5A6E99;
+      --mono:     #7A9AD0;
+      --border:   rgba(140,180,255,0.10);
+      --grid:     rgba(140,180,255,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ─── GRID BACKGROUND ───────────────────────────────────── */
+    .grid-bg {
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ─── ANNOUNCEMENT BAR ──────────────────────────────────── */
+    .bar {
+      position: relative; z-index: 100;
+      background: var(--accent); color: #fff;
+      text-align: center; padding: 10px 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; letter-spacing: 0.06em;
+    }
+    .bar span { opacity: 0.7; margin: 0 12px; }
+
+    /* ─── NAVBAR ────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 99;
+      background: rgba(11, 17, 32, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 40px; height: 60px;
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 18px;
+      letter-spacing: 0.04em; color: var(--text);
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-logo .sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.14em;
+      color: var(--muted); text-transform: uppercase;
+      display: block; margin-top: 1px;
+    }
+    .nav-links {
+      display: flex; gap: 32px; list-style: none;
+    }
+    .nav-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+
+    /* ─── HERO ──────────────────────────────────────────────── */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 60px 48px 48px;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .hero-top-label {
+      position: absolute; top: 24px; right: 48px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em;
+      color: var(--muted); text-transform: uppercase;
+      text-align: right; line-height: 1.8;
+    }
+    .hero-top-label .dot { color: var(--accent); }
+    .hero-side-label {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+      transform-origin: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.16em;
+      color: var(--muted); text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .hero-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(64px, 11.5vw, 180px);
+      line-height: 0.92; letter-spacing: -0.03em;
+      color: var(--text); overflow: hidden;
+    }
+    .hero-headline .line { display: block; overflow: hidden; }
+    .hero-headline .line span { display: block; }
+    .hero-headline .outline {
+      -webkit-text-stroke: 2px var(--text); color: transparent;
+    }
+    .hero-headline .accent-word { color: var(--accent); }
+    .hero-divider {
+      width: 100%; height: 1px;
+      background: var(--border); margin: 32px 0;
+    }
+    .hero-bottom {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 24px;
+    }
+    .hero-tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; letter-spacing: 0.1em;
+      color: var(--muted); text-transform: uppercase;
+    }
+    .hero-tagline strong { color: var(--text); font-weight: 500; }
+    .hero-cta { display: flex; gap: 16px; align-items: center; }
+
+    /* ─── BUTTONS ───────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--accent); color: #fff;
+      padding: 14px 28px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600; font-size: 13px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: all 0.25s;
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      border: 1px solid var(--border); color: var(--muted);
+      padding: 14px 28px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500; font-size: 13px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: all 0.25s;
+    }
+    .btn-ghost:hover { border-color: var(--text); color: var(--text); }
+
+    /* crosshair decorations */
+    .crosshair { position: absolute; width: 24px; height: 24px; opacity: 0.3; }
+    .crosshair::before, .crosshair::after {
+      content: ''; position: absolute; background: var(--accent);
+    }
+    .crosshair::before { width: 1px; height: 100%; left: 50%; transform: translateX(-50%); }
+    .crosshair::after  { height: 1px; width: 100%; top: 50%; transform: translateY(-50%); }
+
+    /* ─── TRUST STRIP ───────────────────────────────────────── */
+    .trust-strip {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+    .trust-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      padding: 28px 20px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .trust-item:last-child { border-right: none; }
+    .trust-icon { font-size: 22px; line-height: 1; }
+    .trust-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    /* ─── SECTION HEADER ────────────────────────────────────── */
+    .section-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(100px, 18vw, 280px);
+      line-height: 0.85; letter-spacing: -0.04em;
+      -webkit-text-stroke: 1px rgba(240,234,216,0.08);
+      color: transparent; user-select: none; pointer-events: none;
+    }
+    .section-title-wrap {
+      position: relative; z-index: 1;
+      padding: 48px 48px 0; overflow: hidden;
+    }
+    .section-title-row {
+      display: flex; align-items: flex-end; gap: 24px; margin-top: -80px;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(36px, 5.5vw, 80px);
+      line-height: 1; letter-spacing: -0.02em;
+    }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.12em;
+      color: var(--muted); text-transform: uppercase;
+      padding-bottom: 10px;
+    }
+
+    /* ─── PRODUCTS GRID ─────────────────────────────────────── */
+    .products-section {
+      position: relative; z-index: 1;
+      padding: 0 48px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .products-strip {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 0 32px;
+      border-top: 1px solid var(--border);
+      margin-top: 24px;
+    }
+    .products-strip-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.12em;
+      color: var(--muted); text-transform: uppercase;
+    }
+    /* Featured (left, large) + 2 smaller (right column) */
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1px;
+      background: var(--border);
+    }
+    .product-card {
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+      transition: background 0.3s;
+    }
+    .product-card:hover { background: var(--bg3); }
+    .product-card.featured { grid-row: 1 / 3; }
+
+    .product-img-link { display: block; overflow: hidden; }
+    .product-img-link:hover .product-img { filter: brightness(1); transform: scale(1.01); }
+    .product-img {
+      width: 100%; aspect-ratio: 4/3;
+      object-fit: cover;
+      filter: brightness(0.9);
+      transition: all 0.4s;
+    }
+    .product-card.featured .product-img { aspect-ratio: 1; }
+
+    .product-info {
+      padding: 24px 28px 28px; flex: 1;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .product-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--muted);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .product-type::before {
+      content: ''; display: inline-block;
+      width: 20px; height: 1px; background: var(--accent);
+    }
+    .product-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(20px, 2.5vw, 34px);
+      line-height: 1.1; letter-spacing: -0.02em; color: var(--text);
+    }
+    .product-card:not(.featured) .product-name {
+      font-size: clamp(17px, 1.6vw, 24px);
+    }
+    .product-desc {
+      font-size: 13px; line-height: 1.6;
+      color: var(--muted); max-width: 420px;
+    }
+    .product-features {
+      list-style: none; display: flex; flex-direction: column; gap: 6px;
+    }
+    .product-features li {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.08em;
+      color: var(--muted); display: flex; align-items: center; gap: 8px;
+    }
+    .product-features li::before {
+      content: '→'; color: var(--accent); flex-shrink: 0;
+    }
+    .product-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-top: auto; padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .product-price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600; font-size: 22px; color: var(--accent);
+    }
+    .product-card:not(.featured) .product-price { font-size: 18px; }
+    .product-badge {
+      background: var(--accent); color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 4px 10px;
+    }
+    .product-buy {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600; font-size: 11px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text); transition: all 0.25s;
+    }
+    .product-buy:hover {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+    }
+
+    /* ─── HOW IT WORKS ──────────────────────────────────────── */
+    .how-section {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+    .how-step {
+      padding: 48px 32px; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .how-step:last-child { border-right: none; }
+    .how-step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.16em;
+      color: var(--accent); text-transform: uppercase;
+    }
+    .how-step-icon {
+      font-size: 28px; line-height: 1;
+    }
+    .how-step-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600; font-size: 16px;
+      color: var(--text); letter-spacing: -0.01em;
+    }
+    .how-step-desc {
+      font-size: 13px; line-height: 1.6; color: var(--muted);
+    }
+
+    /* ─── MANIFESTO ─────────────────────────────────────────── */
+    .manifesto {
+      position: relative; z-index: 1;
+      padding: 100px 48px;
+      border-bottom: 1px solid var(--border); overflow: hidden;
+    }
+    .manifesto-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      font-size: clamp(28px, 4vw, 58px);
+      line-height: 1.2; letter-spacing: -0.02em;
+      color: var(--text); max-width: 900px;
+    }
+    .manifesto-text em { font-style: normal; color: var(--accent); }
+    .manifesto-sub {
+      margin-top: 32px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; letter-spacing: 0.1em;
+      color: var(--muted); text-transform: uppercase;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .manifesto-sub::before {
+      content: ''; display: block;
+      width: 40px; height: 1px; background: var(--accent);
+    }
+
+    /* ─── FEATURES ──────────────────────────────────────────── */
+    .features {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+    .feature-box { padding: 40px 32px; border-right: 1px solid var(--border); }
+    .feature-box:last-child { border-right: none; }
+    .feature-icon-line {
+      width: 32px; height: 2px;
+      background: var(--accent); margin-bottom: 20px;
+    }
+    .feature-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600; font-size: 15px;
+      color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .feature-desc { font-size: 13px; line-height: 1.6; color: var(--muted); }
+    .feature-num {
+      margin-top: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.14em;
+      color: rgba(122,146,104,0.4); text-transform: uppercase;
+    }
+
+    /* ─── CTA SECTION ───────────────────────────────────────── */
+    .cta-section {
+      position: relative; z-index: 1;
+      padding: 100px 48px; overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+    .cta-bg-text {
+      position: absolute; bottom: -30px; right: -20px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(80px, 14vw, 220px);
+      line-height: 1; letter-spacing: -0.04em;
+      -webkit-text-stroke: 1px rgba(240,234,216,0.05);
+      color: transparent; user-select: none; pointer-events: none;
+    }
+    .cta-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(40px, 6vw, 90px);
+      line-height: 0.95; letter-spacing: -0.03em;
+      color: var(--text); margin-bottom: 32px;
+    }
+    .cta-title .outline {
+      -webkit-text-stroke: 2px var(--accent); color: transparent;
+    }
+    .cta-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; letter-spacing: 0.1em;
+      color: var(--muted); text-transform: uppercase; margin-bottom: 40px;
+    }
+    .cta-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    /* ─── FOOTER ────────────────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      padding: 48px; border-top: 1px solid var(--border);
+    }
+    .footer-inner { display: flex; flex-direction: column; gap: 32px; }
+    .footer-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; flex-wrap: wrap; gap: 32px;
+    }
+    .footer-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 24px; letter-spacing: 0.02em;
+    }
+    .footer-brand span { color: var(--accent); }
+    .footer-tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.12em;
+      color: var(--muted); text-transform: uppercase; margin-top: 6px;
+    }
+    .footer-links { display: flex; gap: 48px; flex-wrap: wrap; }
+    .footer-col h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col a { font-size: 13px; color: var(--muted); transition: color 0.2s; }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 24px; border-top: 1px solid var(--border);
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em;
+      color: rgba(122,146,104,0.5); text-transform: uppercase;
+    }
+    .footer-site-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em;
+      color: var(--accent); text-transform: uppercase;
+      display: flex; align-items: center; gap: 6px; transition: opacity 0.2s;
+    }
+    .footer-site-link:hover { opacity: 0.7; }
+
+    /* ─── SCROLL REVEAL ─────────────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(30px); }
+    .reveal.visible { opacity: 1; transform: translateY(0); transition: opacity 0.7s ease, transform 0.7s ease; }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 40px 24px 36px; }
+      .hero-top-label { right: 24px; }
+      .hero-side-label { display: none; }
+      .trust-strip { grid-template-columns: repeat(2, 1fr); }
+      .trust-item:nth-child(2) { border-right: none; }
+      .section-title-wrap { padding: 32px 24px 0; }
+      .products-section { padding: 0 24px 60px; }
+      .products-grid { grid-template-columns: 1fr; }
+      .product-card.featured { grid-row: auto; }
+      .how-section { grid-template-columns: 1fr 1fr; }
+      .how-step:nth-child(2) { border-right: none; }
+      .manifesto { padding: 60px 24px; }
+      .features { grid-template-columns: 1fr 1fr; }
+      .feature-box:nth-child(2) { border-right: none; }
+      .cta-section { padding: 60px 24px; }
+      footer { padding: 32px 24px; }
+      .footer-top { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div id="fx-cursor"></div>
+  <div id="fx-cursor-ring"></div>
+
+  <!-- GRID BACKGROUND -->
+  <div class="grid-bg"></div>
+
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="bar">
+    ₿ Primer bot activo en <strong>menos de 24h</strong> <span>·</span> Zero código <span>·</span> Stop Loss automático incluido
+  </div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="https://crypto-shop.fluxit.es" class="nav-logo">
+      FLUXIT<span>.</span>CRYPTO
+      <span class="sub">Trading automatizado con IA</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#productos">Productos</a></li>
+      <li><a href="#como-funciona">Cómo funciona</a></li>
+      <li><a href="#starter">⚡ Starter — €49</a></li>
+      <li><a href="#pro">🔥 Pro — €149</a></li>
+      <li><a href="#vip">👑 VIP — €249</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <a href="https://www.fluxit.es" class="btn-ghost" style="padding:8px 16px;font-size:11px;">fluxit.es →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div id="hero-particles"></div>
+    <div class="btc-deco" style="right:6%;top:10%;">₿</div>
+    <div class="crosshair" style="top:18%;left:12%;"></div>
+    <div class="crosshair" style="bottom:22%;right:15%;"></div>
+    <div class="crosshair" style="top:60%;left:55%;"></div>
+
+    <div class="hero-top-label">
+      <div>EST. 2026 <span class="dot">●</span></div>
+      <div>BINANCE · BYBIT · MEXC</div>
+      <div>BOT ACTIVO EN &lt;24H</div>
+    </div>
+
+    <div class="hero-side-label">FLUXIT CRYPTO — TRADING AUTOMÁTICO CON IA</div>
+
+    <h1 class="hero-headline" id="heroHeadline">
+      <div class="line"><span>DUERME</span></div>
+      <div class="line"><span class="outline">MIENTRAS</span></div>
+      <div class="line"><span class="accent-word">EL BOT</span><span style="color:var(--text)"> OPERA.</span></div>
+    </h1>
+
+    <div class="hero-divider"></div>
+
+    <div class="hero-bottom">
+      <div class="hero-tagline">
+        <strong>Stop Loss automático</strong> — <strong>Zero código</strong><br>
+        Desde €49 · Telegram · Binance · Sin experiencia necesaria
+      </div>
+      <div class="hero-cta">
+        <a href="#productos" class="btn-primary">Ver bots de trading ↓</a>
+        <a href="https://www.fluxit.es" class="btn-ghost" target="_blank">fluxit.es →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST STRIP -->
+  <div class="trust-strip">
+    <div class="trust-item">
+      <div class="trust-icon">⚡</div>
+      <div class="trust-label">Bot activo en 24h</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🔒</div>
+      <div class="trust-label">Stop Loss automático</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🤖</div>
+      <div class="trust-label">Zero código necesario</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">💰</div>
+      <div class="trust-label">Garantía 30 días</div>
+    </div>
+  </div>
+
+  <!-- PRODUCTOS -->
+  <div id="productos" style="position:relative;z-index:1;">
+    <div class="section-title-wrap">
+      <div class="section-num reveal">01</div>
+      <div class="section-title-row">
+        <div class="section-title reveal">Bots de Trading</div>
+        <div class="section-label reveal">₿ Automatización · Binance · IA</div>
+      </div>
+    </div>
+
+    <div class="products-section">
+      <div class="products-strip">
+        <span style="font-size:20px;">🤖</span>
+        <span class="products-strip-text">Trading automático 24/7 — Tu bot opera mientras tú descansas</span>
+      </div>
+
+      <div class="products-grid">
+
+        <!-- FEATURED: Pro (centro, más popular) -->
+        <div id="pro" class="product-card featured reveal">
+          <a href="/products/fluxit-crypto-pro-configuracion-completa-incluida" class="product-img-link">
+            <img
+              src="https://cdn.shopify.com/s/files/1/1016/7458/2351/files/fluxit_crypto_ai_pro.png"
+              alt="FluxIT Crypto Pro — Configuración completa incluida"
+              class="product-img"
+              loading="lazy">
+          </a>
+          <div class="product-info">
+            <div class="product-type">Más popular · Done for you</div>
+            <a href="/products/fluxit-crypto-pro-configuracion-completa-incluida" class="product-name" style="display:block;">
+              FluxIT Crypto Pro
+            </a>
+            <div class="product-desc">
+              Bot live en tu cuenta de Binance en menos de 24 horas — nuestro equipo lo configura todo por ti. Sin tocar una sola línea de código.
+            </div>
+            <ul class="product-features">
+              <li>Configuración completa en tu Binance</li>
+              <li>Stop Loss y Take Profit automáticos</li>
+              <li>Bot activo en menos de 24h</li>
+              <li>Soporte durante el proceso</li>
+              <li>Compatible con Binance, Bybit, MEXC</li>
+            </ul>
+            <div class="product-footer">
+              <div>
+                <div class="product-price">€149</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="product-badge">Más popular</span>
+                <a href="https://crypto-shop.fluxit.es/cart/57675157471567:1" class="product-buy">Comprar →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Starter -->
+        <div id="starter" class="product-card reveal">
+          <a href="/products/fluxit-crypto-starter-bot-de-trading-automatico" class="product-img-link">
+            <img
+              src="https://cdn.shopify.com/s/files/1/1016/7458/2351/files/IMG_5382_64d9c992-96a9-4cbf-8f23-9e73cc4a0129.png"
+              alt="FluxIT Crypto Starter — Bot de trading automático"
+              class="product-img"
+              loading="lazy">
+          </a>
+          <div class="product-info">
+            <div class="product-type">Digital · Autoinstalable</div>
+            <a href="/products/fluxit-crypto-starter-bot-de-trading-automatico" class="product-name" style="display:block;">FluxIT Crypto Starter</a>
+            <div class="product-desc">Bot de Telegram con Stop Loss/Take Profit automático. Cero código. Lo configuras tú en minutos con nuestra guía.</div>
+            <div class="product-footer">
+              <div class="product-price">€49</div>
+              <a href="https://crypto-shop.fluxit.es/cart/57674900046159:1" class="product-buy">Comprar →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIP -->
+        <div id="vip" class="product-card reveal">
+          <a href="/products/fluxit-crypto-vip-setup-3-meses-de-soporte" class="product-img-link">
+            <img
+              src="https://cdn.shopify.com/s/files/1/1016/7458/2351/files/fluxit_crypto_ai_vip.png"
+              alt="FluxIT Crypto VIP — Setup + 3 meses de soporte"
+              class="product-img"
+              loading="lazy">
+          </a>
+          <div class="product-info">
+            <div class="product-type">Premium · Soporte personal</div>
+            <a href="/products/fluxit-crypto-vip-setup-3-meses-de-soporte" class="product-name" style="display:block;">FluxIT Crypto VIP</a>
+            <div class="product-desc">Setup completo + 3 meses de soporte personal y optimización de estrategia. Para traders que quieren un experto a su lado.</div>
+            <div class="product-footer">
+              <div class="product-price">€249</div>
+              <a href="https://crypto-shop.fluxit.es/cart/57675200659791:1" class="product-buy">Comprar →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CÓMO FUNCIONA -->
+  <div id="como-funciona" style="position:relative;z-index:1;">
+    <div class="section-title-wrap">
+      <div class="section-num reveal">02</div>
+      <div class="section-title-row">
+        <div class="section-title reveal">Cómo funciona</div>
+        <div class="section-label reveal">Proceso · Simple · Rápido</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="how-section">
+    <div class="how-step reveal">
+      <div class="how-step-num">PASO — 01</div>
+      <div class="how-step-icon">🛒</div>
+      <div class="how-step-title">Elige tu plan</div>
+      <div class="how-step-desc">Selecciona Starter, Pro o VIP según tu nivel y objetivos. Pago seguro vía Shopify.</div>
+    </div>
+    <div class="how-step reveal">
+      <div class="how-step-num">PASO — 02</div>
+      <div class="how-step-icon">📩</div>
+      <div class="how-step-title">Acceso inmediato</div>
+      <div class="how-step-desc">Recibes acceso al bot y guía de configuración por email en segundos. En Pro y VIP, nuestro equipo te contacta.</div>
+    </div>
+    <div class="how-step reveal">
+      <div class="how-step-num">PASO — 03</div>
+      <div class="how-step-icon">⚙️</div>
+      <div class="how-step-title">Configuración</div>
+      <div class="how-step-desc">Conecta tu exchange (Binance, Bybit, MEXC) con la API. En Pro/VIP lo hacemos nosotros por ti en &lt;24h.</div>
+    </div>
+    <div class="how-step reveal">
+      <div class="how-step-num">PASO — 04</div>
+      <div class="how-step-icon">📈</div>
+      <div class="how-step-title">El bot opera 24/7</div>
+      <div class="how-step-desc">Stop Loss, Take Profit y estrategia automáticos. Duerme tranquilo mientras el bot trabaja para ti.</div>
+    </div>
+  </div>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto">
+    <div class="manifesto-text reveal">
+      "Los mejores traders no son los que más horas pasan mirando pantallas.
+      Son los que han automatizado <em>lo que funciona</em>."
+    </div>
+    <div class="manifesto-sub reveal">
+      Fluxit Crypto — Automatización · IA · Trading 24/7
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature-box reveal">
+      <div class="feature-icon-line"></div>
+      <div class="feature-title">Zero código</div>
+      <div class="feature-desc">No necesitas saber programar. Nuestro bot funciona con Telegram — tan sencillo como escribir un mensaje.</div>
+      <div class="feature-num">FEATURE — 01</div>
+    </div>
+    <div class="feature-box reveal">
+      <div class="feature-icon-line"></div>
+      <div class="feature-title">Stop Loss automático</div>
+      <div class="feature-desc">Protege tu capital sin estar pegado a la pantalla. El bot gestiona el riesgo por ti, 24 horas al día.</div>
+      <div class="feature-num">FEATURE — 02</div>
+    </div>
+    <div class="feature-box reveal">
+      <div class="feature-icon-line"></div>
+      <div class="feature-title">Exchanges compatibles</div>
+      <div class="feature-desc">Funciona con Binance, Bybit, MEXC y más. Compatible con los principales exchanges del mercado.</div>
+      <div class="feature-num">FEATURE — 03</div>
+    </div>
+    <div class="feature-box reveal">
+      <div class="feature-icon-line"></div>
+      <div class="feature-title">Soporte real</div>
+      <div class="feature-desc">No te quedas solo. En Pro y VIP tienes soporte directo con nuestro equipo para resolver cualquier duda.</div>
+      <div class="feature-num">FEATURE — 04</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-bg-text">CRYPTO</div>
+    <div class="cta-title reveal">
+      EMPIEZA<br>
+      HOY <span class="outline">MISMO</span>.
+    </div>
+    <div class="cta-sub reveal">3 planes · Desde €49 · Bot activo en menos de 24h</div>
+    <div class="cta-btns">
+      <a href="https://crypto-shop.fluxit.es/cart/57674900046159:1" class="btn-primary reveal">⚡ Starter — €49</a>
+      <a href="https://crypto-shop.fluxit.es/cart/57675157471567:1" class="btn-primary reveal" style="background:transparent;border:1px solid var(--accent);color:var(--accent);">🔥 Pro — €149</a>
+      <a href="https://crypto-shop.fluxit.es/cart/57675200659791:1" class="btn-ghost reveal">👑 VIP — €249</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand">FLUXIT<span>.</span>CRYPTO</div>
+          <div class="footer-tagline">Bots de Trading Automatizado con IA</div>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Productos</h4>
+            <ul>
+              <li><a href="https://crypto-shop.fluxit.es/cart/57674900046159:1">Crypto Starter — €49</a></li>
+              <li><a href="https://crypto-shop.fluxit.es/cart/57675157471567:1">Crypto Pro — €149</a></li>
+              <li><a href="https://crypto-shop.fluxit.es/cart/57675200659791:1">Crypto VIP — €249</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Empresa</h4>
+            <ul>
+              <li><a href="https://www.fluxit.es" target="_blank">fluxit.es →</a></li>
+              <li><a href="https://shop.fluxit.es" target="_blank">shop.fluxit.es →</a></li>
+              <li><a href="https://crypto-shop.fluxit.es/pages/contact">Contacto</a></li>
+              <li><a href="https://crypto-shop.fluxit.es/policies/privacy-policy">Privacidad</a></li>
+              <li><a href="https://crypto-shop.fluxit.es/policies/refund-policy">Devoluciones</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Exchanges</h4>
+            <ul>
+              <li><a href="#productos">Binance</a></li>
+              <li><a href="#productos">Bybit</a></li>
+              <li><a href="#productos">MEXC</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2026 Fluxit · crypto-shop.fluxit.es · All rights reserved</div>
+        <a href="https://www.fluxit.es" target="_blank" class="footer-site-link">
+          También automatizamos tu negocio → fluxit.es
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ═══════════════════════════════════════════════════════════
+       CURSOR
+    ═══════════════════════════════════════════════════════════ */
+    const fxCursor = document.getElementById('fx-cursor');
+    const fxRing   = document.getElementById('fx-cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    (function cursorLoop() {
+      rx += (mx - rx) * 0.10;
+      ry += (my - ry) * 0.10;
+      fxCursor.style.left = mx + 'px';
+      fxCursor.style.top  = my + 'px';
+      fxRing.style.left   = rx + 'px';
+      fxRing.style.top    = ry + 'px';
+      requestAnimationFrame(cursorLoop);
+    })();
+
+    document.querySelectorAll('a, button, .product-card, .trust-item, .how-step').forEach(el => {
+      el.addEventListener('mouseenter', () => fxCursor.classList.add('hovered'));
+      el.addEventListener('mouseleave', () => fxCursor.classList.remove('hovered'));
+    });
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO HEADLINE — staggered word slide-up
+    ═══════════════════════════════════════════════════════════ */
+    const lines = document.querySelectorAll('#heroHeadline .line span');
+    lines.forEach((span, i) => {
+      anime({
+        targets: span,
+        translateY: [80, 0],
+        opacity: [0, 1],
+        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
+        duration: 1100,
+        delay: 150 + i * 160,
+      });
+    });
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO PARTICLES — floating orange dots
+    ═══════════════════════════════════════════════════════════ */
+    const particleContainer = document.getElementById('hero-particles');
+    if (particleContainer) {
+      const COUNT = 18;
+      const particles = [];
+      for (let i = 0; i < COUNT; i++) {
+        const p = document.createElement('div');
+        p.className = 'hero-particle';
+        const size = Math.random() * 4 + 1.5;
+        p.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${Math.random() * 100}%;
+          top:${Math.random() * 100}%;
+        `;
+        particleContainer.appendChild(p);
+        particles.push(p);
+      }
+      particles.forEach((p, i) => {
+        anime({
+          targets: p,
+          translateX: () => anime.random(-60, 60),
+          translateY: () => anime.random(-60, 60),
+          opacity: [0, () => Math.random() * 0.5 + 0.2, 0],
+          duration: () => anime.random(4000, 9000),
+          delay: () => anime.random(0, 3000),
+          loop: true,
+          easing: 'easeInOutSine',
+          direction: 'alternate',
+        });
+      });
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       NAV + BAR FADE IN
+    ═══════════════════════════════════════════════════════════ */
+    anime({
+      targets: ['nav', '.bar'],
+      opacity: [0, 1],
+      translateY: [-10, 0],
+      easing: 'easeOutExpo',
+      duration: 800,
+      delay: anime.stagger(80),
+    });
+
+    /* ═══════════════════════════════════════════════════════════
+       TRUST STRIP — stagger on load
+    ═══════════════════════════════════════════════════════════ */
+    anime({
+      targets: '.trust-item',
+      opacity: [0, 1],
+      translateY: [20, 0],
+      easing: 'easeOutExpo',
+      duration: 700,
+      delay: anime.stagger(100, { start: 600 }),
+    });
+
+    /* ═══════════════════════════════════════════════════════════
+       CTA BUTTONS + SUBTEXT
+    ═══════════════════════════════════════════════════════════ */
+    const ctaObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          anime({
+            targets: '.cta-sub',
+            opacity: [0, 1],
+            translateY: [10, 0],
+            easing: 'easeOutExpo',
+            duration: 600,
+            delay: 100,
+          });
+          anime({
+            targets: '.cta-btns a',
+            opacity: [0, 1],
+            translateY: [20, 0],
+            easing: 'easeOutExpo',
+            duration: 700,
+            delay: anime.stagger(100, { start: 200 }),
+          });
+          ctaObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const ctaSection = document.querySelector('.cta-section');
+    if (ctaSection) ctaObserver.observe(ctaSection);
+
+    /* ═══════════════════════════════════════════════════════════
+       SCROLL REVEAL
+    ═══════════════════════════════════════════════════════════ */
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* ═══════════════════════════════════════════════════════════
+       PRODUCT CARD — 3D TILT ON HOVER
+    ═══════════════════════════════════════════════════════════ */
+    document.querySelectorAll('.product-card.featured').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width  - 0.5;
+        const y = (e.clientY - rect.top)  / rect.height - 0.5;
+        card.style.transform = `perspective(900px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  </script>
+</body>
+</html>
